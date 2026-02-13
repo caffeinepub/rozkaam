@@ -1,0 +1,168 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-13T20:32:40.911Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 8,
+    "implemented": 6,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Replace the requested Firebase phone-OTP authentication with Internet Identity login, because third-party auth (including Firebase) is not supported on this platform. After a successful Internet Identity login, require the user to select a role (Labour or Customer) and persist that role in an on-chain users data store.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/screens/LoginScreen.tsx",
+          "frontend/src/screens/SelectRoleScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/screens/LoginScreen.tsx",
+          "frontend/src/screens/SelectRoleScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Implement a backend users store keyed by authenticated user (principal/uid-equivalent) with fields equivalent to: uid, phone, role (labour/customer), created_time. Since phone OTP is not available, store phone as optional and only when explicitly provided elsewhere (e.g., in Labour profile).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Refactor the backend labour data model and APIs to support Labour profiles tied to the authenticated user, with fields: uid, name, phone, skill, area, wage, availability (boolean), rating (default 5), created_time. Add APIs to create the caller’s labour profile, fetch the caller’s labour profile, update the caller’s profile (including availability), and list/search labours for customers by skill+area.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Add a first-time-only Labour Profile Setup screen for users whose stored role is Labour and who do not yet have a Labour profile. The setup form must include: Full Name, Profile Photo (optional), Skill (dropdown with the 4 provided options), Area (dropdown with Model Town / Industrial Area / Assandh Road), Daily Wage, and an Availability toggle (Available/Not Available). Saving creates the labour profile via the backend.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/lib/areaOptions.ts",
+          "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/screens/LabourRegistrationScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/lib/areaOptions.ts",
+          "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/screens/LabourRegistrationScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Implement a Labour Home screen for users with role = Labour that shows: a profile summary (name, skill, area, wage, rating, availability), an availability switch that updates the saved profile, and an Edit Profile button that lets the user update the same profile fields (including optional photo).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/screens/LabourHomeScreen.tsx",
+          "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/screens/LabourHomeScreen.tsx",
+          "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Update the Customer Home screen to include both Skill and Area dropdown filters and show only labours where skill equals the selected skill AND area equals the selected area.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/screens/CustomerHomeScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/lib/areaOptions.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/screens/CustomerHomeScreen.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/lib/areaOptions.ts"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Ensure all user-facing UI text is in English across all screens (including buttons, headings, form labels, validation errors, empty states, and navigation text).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/screens/CustomerHomeScreen.tsx",
+          "frontend/src/screens/SelectRoleScreen.tsx",
+          "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "frontend/src/screens/LabourHomeScreen.tsx",
+          "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "frontend/src/screens/SplashScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/screens/CustomerHomeScreen.tsx",
+          "frontend/src/screens/SelectRoleScreen.tsx",
+          "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "frontend/src/screens/LabourHomeScreen.tsx",
+          "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "frontend/src/screens/SplashScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Update app navigation to be authentication- and role-aware: Login -> (Role selection if missing) -> Labour flow (Profile Setup if missing, else Labour Home) OR Customer flow (Customer Home).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/screens/LoginScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/screens/LoginScreen.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/blob-storage/Mixin.mo",
+    "backend/blob-storage/Storage.mo",
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "build-template/README.md",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/lib/areaOptions.ts",
+    "frontend/src/screens/CustomerHomeScreen.tsx",
+    "frontend/src/screens/LabourEditProfileScreen.tsx",
+    "frontend/src/screens/LabourHomeScreen.tsx",
+    "frontend/src/screens/LabourProfileSetupScreen.tsx",
+    "frontend/src/screens/LabourRegistrationScreen.tsx",
+    "frontend/src/screens/LoginScreen.tsx",
+    "frontend/src/screens/SelectRoleScreen.tsx",
+    "frontend/src/screens/SplashScreen.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

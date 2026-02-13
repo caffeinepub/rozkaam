@@ -1,0 +1,174 @@
+{
+  "kind": "build_request",
+  "title": "Add authenticated role-based flows with Labour profiles and Customer search filters for RozKaam",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Replace the requested Firebase phone-OTP authentication with Internet Identity login, because third-party auth (including Firebase) is not supported on this platform. After a successful Internet Identity login, require the user to select a role (Labour or Customer) and persist that role in an on-chain users data store.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Use Firebase authentication (phone login with OTP).\nAfter login, user must select role:\n- Labour\n- Customer\n\nStore user role in Firestore collection \"users\"."
+        ]
+      },
+      "acceptanceCriteria": [
+        "If the user is not logged in, the app shows a login screen with a button to sign in using Internet Identity.",
+        "After login, if no role is stored for the user, the app navigates to a role selection screen (Labour/Customer).",
+        "Selecting a role persists it for the current authenticated user and the app routes to the correct role home flow on subsequent app loads.",
+        "Role can be retrieved for the current user without requiring re-selection each session."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement a backend users store keyed by authenticated user (principal/uid-equivalent) with fields equivalent to: uid, phone, role (labour/customer), created_time. Since phone OTP is not available, store phone as optional and only when explicitly provided elsewhere (e.g., in Labour profile).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Users collection fields:\n- uid\n- phone\n- role (labour / customer)\n- created_time"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes APIs to set and get the caller's role.",
+        "User role values are restricted to exactly: \"labour\" | \"customer\".",
+        "created_time is set when the role record is first created.",
+        "No Firebase/Firestore code exists in the backend."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Refactor the backend labour data model and APIs to support Labour profiles tied to the authenticated user, with fields: uid, name, phone, skill, area, wage, availability (boolean), rating (default 5), created_time. Add APIs to create the caller’s labour profile, fetch the caller’s labour profile, update the caller’s profile (including availability), and list/search labours for customers by skill+area.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Save to Firestore collection \"labours\"\n\nLabours collection fields:\n- uid\n- name\n- phone\n- skill\n- area\n- wage\n- availability (boolean)\n- rating (default 5)\n- created_time\n\nCustomer Home Screen:\nTop section:\n- Select Skill (dropdown)\n- Select Area (dropdown)\n\nBelow:\nListView of labours where:\n- skill = selected skill\n- area = selected area"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A labour profile is associated with the authenticated caller (no anonymous create).",
+        "New profiles default rating to 5 and require explicit availability value.",
+        "Customer list/search API returns only records matching both the selected skill and selected area.",
+        "Existing labour list functionality continues to work but now includes the new fields (availability, rating, uid)."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a first-time-only Labour Profile Setup screen for users whose stored role is Labour and who do not yet have a Labour profile. The setup form must include: Full Name, Profile Photo (optional), Skill (dropdown with the 4 provided options), Area (dropdown with Model Town / Industrial Area / Assandh Road), Daily Wage, and an Availability toggle (Available/Not Available). Saving creates the labour profile via the backend.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Show Labour Profile Setup Screen (first time only).\n\nFields:\n- Full Name\n- Profile Photo (optional)\n- Skill (dropdown)\n   - House Cleaning\n   - Helper\n   - Carpenter\n   - Gardening\n- Area (dropdown: Model Town, Industrial Area, Assandh Road)\n- Daily Wage\n- Availability Toggle (Available / Not Available)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A Labour user without a saved profile is routed to the profile setup screen and cannot access the Labour home until the profile is saved.",
+        "Skill options are exactly: House Cleaning, Helper, Carpenter, Gardening.",
+        "Area options are exactly: Model Town, Industrial Area, Assandh Road.",
+        "Submitting valid data creates the profile and navigates to the Labour Home screen.",
+        "Profile photo is optional; if provided, it is stored and can be rendered in the UI (storage mechanism compatible with this stack)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement a Labour Home screen for users with role = Labour that shows: a profile summary (name, skill, area, wage, rating, availability), an availability switch that updates the saved profile, and an Edit Profile button that lets the user update the same profile fields (including optional photo).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Labour Home Screen:\n- Show profile summary\n- Availability switch\n- Edit profile button"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Availability switch updates the backend and persists across reloads.",
+        "Edit Profile updates are saved and reflected immediately in the Labour Home summary.",
+        "The screen is only accessible to authenticated users whose role is Labour."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Update the Customer Home screen to include both Skill and Area dropdown filters and show only labours where skill equals the selected skill AND area equals the selected area.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Customer Home Screen:\n\nTop section:\n- Select Skill (dropdown)\n- Select Area (dropdown)\n\nBelow:\nListView of labours where:\n- skill = selected skill\n- area = selected area"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Customer Home includes an Area dropdown with exactly: Model Town, Industrial Area, Assandh Road.",
+        "When both filters are selected, the list contains only matching labour profiles.",
+        "When filters yield no results, show an English empty-state message."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Ensure all user-facing UI text is in English across all screens (including buttons, headings, form labels, validation errors, empty states, and navigation text).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "Use English for any user-facing text in the build request."
+        ]
+      },
+      "acceptanceCriteria": [
+        "No Hindi strings remain in the UI in the updated screens.",
+        "Validation and toast messages are in English.",
+        "Primary CTAs read clearly in English (e.g., Back, Submit, Save, Available, Not Available)."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update app navigation to be authentication- and role-aware: Login -> (Role selection if missing) -> Labour flow (Profile Setup if missing, else Labour Home) OR Customer flow (Customer Home).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-7"
+        ],
+        "quotes": [
+          "After login, user must select role:\n- Labour\n- Customer"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On app load, routing is determined by auth state and saved role/profile state.",
+        "Unauthenticated users cannot reach Labour/Customer screens without logging in.",
+        "Role selection screen appears only when role is not yet set for the logged-in user."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not add Firebase Authentication, Firebase Phone OTP, or Firestore usage; use Internet Identity and the existing single Motoko canister backend instead (platform constraint).",
+    "Backend must remain a single-actor Motoko architecture (all logic in backend/main.mo); add backend/migration.mo only if needed for state upgrades.",
+    "Do not edit files under frontend immutable paths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui). Compose with them instead.",
+    "Keep the app simple and professional; avoid heavy animations."
+  ],
+  "nonGoals": [
+    "Online payments.",
+    "Advanced analytics.",
+    "Push notifications, SMS, or external messaging integrations.",
+    "Real-time chat (WebSockets).",
+    "Admin panel.",
+    "Exact Firebase schema/collections; the data model should be represented within the Internet Computer canister instead."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

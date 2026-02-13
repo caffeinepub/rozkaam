@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "RozKaam: a simple, professional mobile app for local labour hiring in Panipat with Firebase phone OTP auth, role-based flows for Labour and Customer, and Firestore-backed profiles and search (no payments/analytics/heavy animations).",
+  "architectural_notes": [
+    "Use Firebase Authentication: phone number login with OTP.",
+    "Store user role in Firestore collection 'users' with fields: uid, phone, role, created_time.",
+    "Store labour profiles in Firestore collection 'labours' with fields: uid, name, phone, skill, area, wage, availability (boolean), rating (default 5), created_time.",
+    "Role-based routing after login: Labour users go to Labour flow; Customer users go to Customer flow.",
+    "Constraints: no online payments, no advanced analytics, no heavy animations; keep UI simple and professional."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-replace-the-requested-firebase-phone-otp-authentication-with-internet-identity-login-because-third-party-auth-including-firebase-is-not-supported-on-this-platform-after-a-successful-internet-identity-login-require-the-user-to-select-a-role-labour-or-customer-and-persist-that-role-in-an-on-chain-users-data-store",
+      "title": "Replace the requested Firebase phone-OTP authentication with Internet Identity login, because third-party auth (including Firebase) is not supported on this platform. After a successful Internet Identity login, require the user to select a role (Labour or Customer) and persist that role in an on-chain users data store.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-first-time-only-labour-profile-setup-screen-for-users-whose-stored-role-is-labour-and-who-do-not-yet-have-a-labour-profile-the-setup-form-must-include-full-name-profile-photo-optional-skill-dropdown-with-the-4-provided-options-area-dropdown-with-model-town-industrial-area-assandh-road-daily-wage-and-an-availability-toggle-available-not-available-saving-creates-the-labour-profile-via-the-backend",
+      "title": "Add a first-time-only Labour Profile Setup screen for users whose stored role is Labour and who do not yet have a Labour profile. The setup form must include: Full Name, Profile Photo (optional), Skill (dropdown with the 4 provided options), Area (dropdown with Model Town / Industrial Area / Assandh Road), Daily Wage, and an Availability toggle (Available/Not Available). Saving creates the labour profile via the backend.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-labour-home-screen-for-users-with-role-labour-that-shows-a-profile-summary-name-skill-area-wage-rating-availability-an-availability-switch-that-updates-the-saved-profile-and-an-edit-profile-button-that-lets-the-user-update-the-same-profile-fields-including-optional-photo",
+      "title": "Implement a Labour Home screen for users with role = Labour that shows: a profile summary (name, skill, area, wage, rating, availability), an availability switch that updates the saved profile, and an Edit Profile button that lets the user update the same profile fields (including optional photo).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-customer-home-screen-to-include-both-skill-and-area-dropdown-filters-and-show-only-labours-where-skill-equals-the-selected-skill-and-area-equals-the-selected-area",
+      "title": "Update the Customer Home screen to include both Skill and Area dropdown filters and show only labours where skill equals the selected skill AND area equals the selected area.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-user-facing-ui-text-is-in-english-across-all-screens-including-buttons-headings-form-labels-validation-errors-empty-states-and-navigation-text",
+      "title": "Ensure all user-facing UI text is in English across all screens (including buttons, headings, form labels, validation errors, empty states, and navigation text).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-app-navigation-to-be-authentication-and-role-aware-login-role-selection-if-missing-labour-flow-profile-setup-if-missing-else-labour-home-or-customer-flow-customer-home",
+      "title": "Update app navigation to be authentication- and role-aware: Login -> (Role selection if missing) -> Labour flow (Profile Setup if missing, else Labour Home) OR Customer flow (Customer Home).",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Set up Firebase phone authentication (OTP) with post-login role selection (Labour/Customer) stored in Firestore users collection",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Implement Labour profile setup (first-time) and persistence in Firestore labours collection with availability toggle and default rating",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement Labour home screen showing profile summary, availability switch, and edit profile",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Implement Customer home screen with skill/area filters and list of matching labours from Firestore",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement a backend users store keyed by authenticated user (principal/uid-equivalent) with fields equivalent to: uid, phone, role (labour/customer), created_time. Since phone OTP is not available, store phone as optional and only when explicitly provided elsewhere (e.g., in Labour profile).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Refactor the backend labour data model and APIs to support Labour profiles tied to the authenticated user, with fields: uid, name, phone, skill, area, wage, availability (boolean), rating (default 5), created_time. Add APIs to create the caller’s labour profile, fetch the caller’s labour profile, update the caller’s profile (including availability), and list/search labours for customers by skill+area.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "RozKaam",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,201 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "RozKaam: Internet Identity auth, role-based flows, labour profiles, and customer search filters (frontend)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Implement Internet Identity login UI and role selection flow that persists the selected role via the canister and restores it on subsequent loads.",
+      "acceptanceCriteria": [
+        "If the user is not logged in, the app shows a login screen with a button to sign in using Internet Identity.",
+        "After login, if no role is stored for the user, the app navigates to a role selection screen (Labour/Customer).",
+        "Selecting a role persists it for the current authenticated user and the app routes to the correct role home flow on subsequent app loads.",
+        "Role can be retrieved for the current user without requiring re-selection each session."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/screens/LoginScreen.tsx",
+          "operation": "create",
+          "description": "Create a dedicated login screen that uses the existing Internet Identity hook to sign in/out and clears cached queries on logout. Use the authorization component guidance for the Internet Identity login pattern (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/screens/SelectRoleScreen.tsx",
+          "operation": "modify",
+          "description": "Refactor role selection to be post-auth only and to persist the chosen role by calling the backend capability (e.g., registerUser with UserRole labour/customer). Ensure the UI is English-only and remove any navigation that bypasses persisted role. Use shadcn-ui Button/Card patterns already present for a professional role selection layout (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Replace legacy labour registration/list hooks with React Query hooks for: fetching caller role, registering role, and fetching caller user profile (if used for gating). Align calls with frontend/src/backend.d.ts and remove any Firestore/Firebase assumptions."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Replace the current splash->selectRole auto-navigation with auth-aware routing: unauthenticated -> LoginScreen; authenticated + missing role -> SelectRoleScreen; authenticated + role present -> role flow entry (Labour or Customer). Ensure role state is restored via backend calls on app load."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add first-time Labour Profile Setup screen with required fields and optional photo upload, gated to Labour users without a profile.",
+      "acceptanceCriteria": [
+        "A Labour user without a saved profile is routed to the profile setup screen and cannot access the Labour home until the profile is saved.",
+        "Skill options are exactly: House Cleaning, Helper, Carpenter, Gardening.",
+        "Area options are exactly: Model Town, Industrial Area, Assandh Road.",
+        "Submitting valid data creates the profile and navigates to the Labour Home screen.",
+        "Profile photo is optional; if provided, it is stored and can be rendered in the UI (storage mechanism compatible with this stack)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/lib/areaOptions.ts",
+          "operation": "create",
+          "description": "Add a single source of truth for the allowed Area dropdown options: Model Town, Industrial Area, Assandh Road."
+        },
+        {
+          "path": "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "operation": "create",
+          "description": "Create the first-time-only Labour Profile Setup form with fields: Full Name, optional Profile Photo, Skill dropdown (from existing SKILL_OPTIONS), Area dropdown (from new area options), Daily Wage, and Availability toggle. Use shadcn-ui form controls (Input/Select/Switch/Button/Card) for consistent UI (Verify the component's usage instructions before implementing.). For optional photo, use blob-storage ExternalBlob to upload and obtain a renderable URL/reference compatible with the stack (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add React Query mutations/queries to support: fetching the caller's Labour profile, creating the caller's Labour profile (including availability and optional photo reference if supported by the backend capability), and invalidating relevant caches on success."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Labour Profile Setup screen into navigation: authenticated + role=labour + no labour profile -> LabourProfileSetupScreen, and block Labour Home until setup completes."
+        },
+        {
+          "path": "frontend/src/screens/LabourRegistrationScreen.tsx",
+          "operation": "rename",
+          "description": "Rename LabourRegistrationScreen to reflect the new role-based Labour profile setup flow (e.g., move/rename to LabourProfileSetupScreen) and remove any legacy Firestore/Firebase-specific behaviors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement Labour Home screen showing profile summary, availability switch, and edit profile flow with optional photo update.",
+      "acceptanceCriteria": [
+        "Availability switch updates the backend and persists across reloads.",
+        "Edit Profile updates are saved and reflected immediately in the Labour Home summary.",
+        "The screen is only accessible to authenticated users whose role is Labour."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/screens/LabourHomeScreen.tsx",
+          "operation": "create",
+          "description": "Create Labour Home screen that reads the caller's Labour profile and renders a summary (name, skill, area, wage, rating, availability, optional photo). Include an availability switch that triggers the backend capability to persist availability. Use shadcn-ui Card/Button/Switch for a simple professional layout (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "operation": "create",
+          "description": "Create an Edit Profile screen/form to update the same fields as setup (including optional photo). Use blob-storage ExternalBlob for photo updates when provided (Verify the component's usage instructions before implementing.). Use shadcn-ui components for consistent form UI (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add mutations for updating Labour profile fields and setting availability. Ensure successful mutations invalidate/refetch the caller Labour profile query so the Labour Home summary updates immediately."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire LabourHomeScreen and LabourEditProfileScreen into the role-aware navigation flow and ensure only authenticated users with role=labour can access them."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Update Customer Home to filter by both Skill and Area and list only matching labour profiles, with an empty state when no results.",
+      "acceptanceCriteria": [
+        "Customer Home includes an Area dropdown with exactly: Model Town, Industrial Area, Assandh Road.",
+        "When both filters are selected, the list contains only matching labour profiles.",
+        "When filters yield no results, show an English empty-state message."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/screens/CustomerHomeScreen.tsx",
+          "operation": "modify",
+          "description": "Add an Area dropdown (using the shared area options) alongside Skill, and fetch/filter results to ensure only labours matching BOTH selected skill and selected area are shown. Update all UI text on this screen to English. Use shadcn-ui Select/Label for the filters (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a query hook that calls the backend capability for searching labours by skill+area (getLaboursBySkillAndArea) and is enabled only when both filters are selected. Keep caching keyed by [skill, area]."
+        },
+        {
+          "path": "frontend/src/lib/areaOptions.ts",
+          "operation": "modify",
+          "description": "Export area option data in a UI-friendly shape (value/label) to plug into shadcn-ui Select while preserving the exact allowed strings."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Ensure all updated screens use English-only user-facing text (labels, buttons, headings, validation, empty states, navigation).",
+      "acceptanceCriteria": [
+        "No Hindi strings remain in the UI in the updated screens.",
+        "Validation and toast messages are in English.",
+        "Primary CTAs read clearly in English (e.g., Back, Submit, Save, Available, Not Available)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/screens/CustomerHomeScreen.tsx",
+          "operation": "modify",
+          "description": "Replace all Hindi strings (headings, labels, empty states, Back button) with clear English equivalents."
+        },
+        {
+          "path": "frontend/src/screens/SelectRoleScreen.tsx",
+          "operation": "modify",
+          "description": "Replace any non-English text with English and ensure button labels and helper copy are consistent and professional."
+        },
+        {
+          "path": "frontend/src/screens/LabourProfileSetupScreen.tsx",
+          "operation": "modify",
+          "description": "Ensure all form labels, validation/toast messages, and CTAs are English-only and consistent (e.g., Save Profile, Daily Wage, Available/Not Available)."
+        },
+        {
+          "path": "frontend/src/screens/LabourHomeScreen.tsx",
+          "operation": "modify",
+          "description": "Ensure all profile summary labels, availability UI, and actions (Edit Profile, Logout, Back if present) are English-only."
+        },
+        {
+          "path": "frontend/src/screens/LabourEditProfileScreen.tsx",
+          "operation": "modify",
+          "description": "Ensure all edit form labels, validation/toast messages, and CTAs are English-only."
+        },
+        {
+          "path": "frontend/src/screens/SplashScreen.tsx",
+          "operation": "modify",
+          "description": "Update the tagline to English to ensure all user-facing entry UI is English-only."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Make navigation fully authentication- and role-aware: Login -> Role selection (if missing) -> Labour (Profile Setup if missing else Home) or Customer (Customer Home).",
+      "acceptanceCriteria": [
+        "On app load, routing is determined by auth state and saved role/profile state.",
+        "Unauthenticated users cannot reach Labour/Customer screens without logging in.",
+        "Role selection screen appears only when role is not yet set for the logged-in user."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Implement centralized screen selection based on Internet Identity auth state and backend-derived role/profile state. Remove the unconditional splash auto-transition and ensure screens are not reachable unless the required auth/role/profile conditions are satisfied."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add/adjust queries needed to compute routing state: caller role (labour/customer) and caller labour profile presence. Ensure queries are disabled until the actor is ready, and handle authorization errors gracefully per the authorization component guidance (Verify the component's usage instructions before implementing.)."
+        },
+        {
+          "path": "frontend/src/screens/LoginScreen.tsx",
+          "operation": "modify",
+          "description": "Provide a single, consistent entry point for unauthenticated users (login CTA) and ensure logging out clears cached app data using React Query to prevent cross-user state leakage. Use the authorization component guidance for logout cache clearing (Verify the component's usage instructions before implementing.)."
+        }
+      ]
+    }
+  ]
+}

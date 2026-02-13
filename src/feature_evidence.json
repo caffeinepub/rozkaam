@@ -1,0 +1,144 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-replace-the-requested-firebase-phone-otp-authentication-with-internet-identity-login-because-third-party-auth-including-firebase-is-not-supported-on-this-platform-after-a-successful-internet-identity-login-require-the-user-to-select-a-role-labour-or-customer-and-persist-that-role-in-an-on-chain-users-data-store",
+      "featureTitle": "Replace the requested Firebase phone-OTP authentication with Internet Identity login, because third-party auth (including Firebase) is not supported on this platform. After a successful Internet Identity login, require the user to select a role (Labour or Customer) and persist that role in an on-chain users data store.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/screens/LoginScreen.tsx",
+        "frontend/src/screens/SelectRoleScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-first-time-only-labour-profile-setup-screen-for-users-whose-stored-role-is-labour-and-who-do-not-yet-have-a-labour-profile-the-setup-form-must-include-full-name-profile-photo-optional-skill-dropdown-with-the-4-provided-options-area-dropdown-with-model-town-industrial-area-assandh-road-daily-wage-and-an-availability-toggle-available-not-available-saving-creates-the-labour-profile-via-the-backend",
+      "featureTitle": "Add a first-time-only Labour Profile Setup screen for users whose stored role is Labour and who do not yet have a Labour profile. The setup form must include: Full Name, Profile Photo (optional), Skill (dropdown with the 4 provided options), Area (dropdown with Model Town / Industrial Area / Assandh Road), Daily Wage, and an Availability toggle (Available/Not Available). Saving creates the labour profile via the backend.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/lib/areaOptions.ts",
+        "frontend/src/screens/LabourProfileSetupScreen.tsx",
+        "frontend/src/screens/LabourRegistrationScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-labour-home-screen-for-users-with-role-labour-that-shows-a-profile-summary-name-skill-area-wage-rating-availability-an-availability-switch-that-updates-the-saved-profile-and-an-edit-profile-button-that-lets-the-user-update-the-same-profile-fields-including-optional-photo",
+      "featureTitle": "Implement a Labour Home screen for users with role = Labour that shows: a profile summary (name, skill, area, wage, rating, availability), an availability switch that updates the saved profile, and an Edit Profile button that lets the user update the same profile fields (including optional photo).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/screens/LabourEditProfileScreen.tsx",
+        "frontend/src/screens/LabourHomeScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-customer-home-screen-to-include-both-skill-and-area-dropdown-filters-and-show-only-labours-where-skill-equals-the-selected-skill-and-area-equals-the-selected-area",
+      "featureTitle": "Update the Customer Home screen to include both Skill and Area dropdown filters and show only labours where skill equals the selected skill AND area equals the selected area.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/lib/areaOptions.ts",
+        "frontend/src/screens/CustomerHomeScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-all-user-facing-ui-text-is-in-english-across-all-screens-including-buttons-headings-form-labels-validation-errors-empty-states-and-navigation-text",
+      "featureTitle": "Ensure all user-facing UI text is in English across all screens (including buttons, headings, form labels, validation errors, empty states, and navigation text).",
+      "files": [
+        "frontend/src/screens/CustomerHomeScreen.tsx",
+        "frontend/src/screens/LabourEditProfileScreen.tsx",
+        "frontend/src/screens/LabourHomeScreen.tsx",
+        "frontend/src/screens/LabourProfileSetupScreen.tsx",
+        "frontend/src/screens/SelectRoleScreen.tsx",
+        "frontend/src/screens/SplashScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-app-navigation-to-be-authentication-and-role-aware-login-role-selection-if-missing-labour-flow-profile-setup-if-missing-else-labour-home-or-customer-flow-customer-home",
+      "featureTitle": "Update app navigation to be authentication- and role-aware: Login -> (Role selection if missing) -> Labour flow (Profile Setup if missing, else Labour Home) OR Customer flow (Customer Home).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/screens/LoginScreen.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

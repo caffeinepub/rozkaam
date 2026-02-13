@@ -1,0 +1,16 @@
+{
+  "frontend/src/App.tsx": "Main app component with Internet Identity authentication and role-based routing that navigates users through login, role selection, profile setup (for labour), and role-specific home screens based on auth state and backend data.",
+  "frontend/src/screens/SplashScreen.tsx": "Splash screen displaying RozKaam branding with English tagline and green gradient background.",
+  "frontend/src/screens/SelectRoleScreen.tsx": "Role selection screen that persists the chosen role (Labour/Customer) via backend and displays English-only UI with loading states during registration.",
+  "frontend/src/screens/LabourRegistrationScreen.tsx": "Labour registration form with Hindi labels, validation, and backend submission showing \"Registration Successful\" message on success.",
+  "frontend/src/screens/CustomerHomeScreen.tsx": "Customer home screen with skill and area filter dropdowns that fetch and display matching labour profiles with rating, wage, and WhatsApp contact button, showing empty state when no results or filters not selected.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including user profile management, role registration, labour profile CRUD, availability updates, and filtered labour search by skill and area.",
+  "frontend/src/lib/skillOptions.ts": "Single source of truth for the 4 allowed skill options (House Cleaning, Helper, Carpenter, Gardening).",
+  "frontend/src/lib/whatsapp.ts": "Helper function to open WhatsApp chat with labour phone number in format https://wa.me/91{phone}.",
+  "frontend/src/index.css": "Global styles with green-themed OKLCH color system for primary colors, maintaining white background and proper contrast for light/dark modes.",
+  "frontend/src/screens/LoginScreen.tsx": "Login screen with Internet Identity sign-in button and professional card layout for unauthenticated users.",
+  "frontend/src/screens/LabourProfileSetupScreen.tsx": "First-time Labour profile setup form with fields for name, phone, skill dropdown, area dropdown, daily wage, and availability toggle, all with English labels and validation.",
+  "frontend/src/screens/LabourHomeScreen.tsx": "Labour home screen displaying profile summary (name, skill, area, wage, rating), availability switch with backend persistence, edit profile button, and logout functionality.",
+  "frontend/src/screens/LabourEditProfileScreen.tsx": "Labour profile edit form allowing updates to name, phone, skill, area, and wage with pre-populated values from existing profile and English-only UI.",
+  "frontend/src/lib/areaOptions.ts": "Single source of truth for the three allowed area options (Model Town, Industrial Area, Assandh Road) used across labour and customer screens."
+}
